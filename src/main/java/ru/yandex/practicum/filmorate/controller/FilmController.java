@@ -16,14 +16,15 @@ import java.util.Map;
 @RequestMapping("/films")
 public class FilmController {
 
-    private final Map<Integer, Film> films = new HashMap<>();
+    private final Map<Long, Film> films = new HashMap<>();
+    private long currentMaxId = 0L;
 
     // Добавление фильма
     @PostMapping
     public Film creatFilm(@Valid @RequestBody Film film) {
         log.info("Метод: {}. Новый фильм: {}", getMethod(), film);
 
-        checkFilm(film);
+        validate(film);
 
         film.setId(getNextId());
         films.put(film.getId(), film);
@@ -34,14 +35,13 @@ public class FilmController {
     // Обновление фильма
     @PutMapping
     public Film updateFilm(@Valid @RequestBody Film newFilm) {
-        log.info("Метод: {}. Обновляемый фильм: {}", getMethod(), newFilm);
         if (!films.containsKey(newFilm.getId())) {
             String message = "Фильм с ID: " + newFilm.getId() + " — не найден";
             log.error(message);
             throw new ValidationException(message);
         }
 
-        checkFilm(newFilm);
+        validate(newFilm);
         films.put(newFilm.getId(), newFilm);
 
         log.info("Метод: {}. Обновлённый фильм: {}", getMethod(), newFilm);
@@ -59,23 +59,12 @@ public class FilmController {
 */
 
     // Создание нового ID
-    private int getNextId() {
-        int currentMaxId = films.keySet()
-                .stream()
-                .mapToInt(id -> id)
-                .max()
-                .orElse(0);
-
+    private long getNextId() {
         return ++currentMaxId;
     }
 
     // Проверка фильма на корректность
-    private void checkFilm(Film film) {
-        if (film.getDescription().length() > 200) {
-            String message = "Максимальная длина описания — 200 символов";
-            log.error(message);
-            throw new ValidationException(message);
-        }
+    private void validate(Film film) {
         if (film.getReleaseDate().isBefore(LocalDate.of(1895, 12, 28))) {
             String message = "Дата релиза: " + film.getReleaseDate() + " — не может быть раньше 28 декабря 1895 года";
             log.error(message);

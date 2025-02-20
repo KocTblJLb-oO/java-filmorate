@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.model;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,11 +18,12 @@ import java.time.LocalDate;
 @ToString
 @AllArgsConstructor
 public class Film {
-    int id;
+    long id;
 
     @NotBlank
     String name;
 
+    @Size(min = 1, max = 200, message = "Максимальная длина описания — 200 символов")
     String description;
 
     LocalDate releaseDate;

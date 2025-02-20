@@ -15,14 +15,14 @@ import java.util.Map;
 @Slf4j
 public class UserController {
 
-    private final Map<Integer, User> users = new HashMap<>();
+    private final Map<Long, User> users = new HashMap<>();
+    private long currentMaxId = 0L;
 
     // Добавление пользователя
     @PostMapping
     public User creatUser(@Valid @RequestBody User user) {
         log.info("Метод: {}. Новый пользователь: {}", getMethod(), user);
-        checkUser(user);
-        checkUserName(user);
+        validate(user);
 
         user.setId(getNextId());
         users.put(user.getId(), user);
@@ -40,8 +40,7 @@ public class UserController {
             throw new ValidationException(message);
         }
 
-        checkUser(newUser);
-        checkUserName(newUser);
+        validate(newUser);
         users.put(newUser.getId(), newUser);
 
         return newUser;
@@ -58,27 +57,18 @@ public class UserController {
 */
 
     // Создание нового ID
-    private int getNextId() {
-        int currentMaxId = users.keySet()
-                .stream()
-                .mapToInt(id -> id)
-                .max()
-                .orElse(0);
-
+    private long getNextId() {
         return ++currentMaxId;
     }
 
     // Проверка пользователя
-    private void checkUser(User user) {
+    private void validate(User user) {
         if (user.getLogin().indexOf(" ") > 0) {
             String message = "Логин: " + user.getLogin() + " - не может содержать пробелы";
             log.error(message);
             throw new ValidationException(message);
         }
-    }
-
-    // Устанавливает в качестве имени логин, если имя пустое
-    private void checkUserName(User user) {
+        // Устанавливает в качестве имени логин, если имя пустое
         if (user.getName() == null || user.getName().isBlank()) {
             user.setName(user.getLogin());
             log.info("Метод: {}. В качестве имени использован логин: {}",
