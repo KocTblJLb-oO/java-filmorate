@@ -16,6 +16,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.LocalDate;
+import java.util.HashSet;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -26,7 +27,7 @@ class FilmControllerTest {
 
     @BeforeEach
     public void startTest() {
-        film = new Film(1, "testName", "descriptionTest", LocalDate.of(1989, 12, 23), 100);
+        film = new Film(1, "testName", "descriptionTest", LocalDate.of(1989, 12, 23), 100, new HashSet<>());
         context = SpringApplication.run(FilmorateApplication.class);
         gson = new GsonBuilder()
                 .registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
