@@ -78,6 +78,6 @@ class FilmControllerTest {
                 .build();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-        assertEquals(500, response.statusCode(), "Код ответа сервера не совпадает");
+        assertEquals(400, response.statusCode(), "Код ответа сервера не совпадает");
     }
 }
