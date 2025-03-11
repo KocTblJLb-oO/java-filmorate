@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -23,4 +25,6 @@ public class User {
 
     @PastOrPresent(message = "Дата рождения должна быть в прошлом или настоящем")
     LocalDate birthday;
+
+    Set<Long> friends = new HashSet<>();
 }
