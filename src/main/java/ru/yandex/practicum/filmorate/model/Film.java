@@ -30,5 +30,8 @@ public class Film {
     @Min(1)
     int duration;
 
+    private final String genre;
+    private final String rating;
+
     Set<Long> likes = new HashSet<>();
 }
