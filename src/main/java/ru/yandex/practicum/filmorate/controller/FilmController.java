@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
@@ -13,15 +14,11 @@ import java.util.Collection;
 @Slf4j
 @RestController
 @RequestMapping("/films")
+@RequiredArgsConstructor
 public class FilmController {
 
     private final FilmStorage filmStorage;
     private final FilmService filmService;
-
-    public FilmController(FilmStorage filmStorage, FilmService filmService) {
-        this.filmStorage = filmStorage;
-        this.filmService = filmService;
-    }
 
     /*
     ------------------------------------------------ Работа с фильмами
