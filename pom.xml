@@ -46,6 +46,13 @@
             <version>2.12.1</version> <!-- Убедитесь, что версия актуальна -->
         </dependency>
 
+        <!--Этот стартер интегрирует в Spring Framework библиотеку Logbook. Она будет выводить в лог информацию об HTTP-запросах и ответах.-->
+        <dependency>
+            <groupId>org.zalando</groupId>
+            <artifactId>logbook-spring-boot-starter</artifactId>
+            <version>3.7.2</version>
+        </dependency>
+
     </dependencies>
 
     <build>
