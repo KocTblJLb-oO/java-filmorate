@@ -169,7 +169,7 @@ public class FilmDbStorage implements FilmStorage {
             throw new ValidationException(message);
         }
         // Проверка рейтинга
-        String query = "select max(mpa_id) FROM mpa";
+        String query = "SELECT COALESCE(MAX(mpa_id), 0) FROM MPA";
         int maxRatingId = jdbc.queryForObject(query, Integer.class);
         if (film.getMpa().getId() > maxRatingId) {
             String message = "Райтинг: " + film.getMpa().getId() + " — Больше максимального: " + maxRatingId;
