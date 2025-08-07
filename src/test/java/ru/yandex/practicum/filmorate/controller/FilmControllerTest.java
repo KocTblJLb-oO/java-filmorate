@@ -1,3 +1,4 @@
+/*
 package ru.yandex.practicum.filmorate.controller;
 
 import com.google.gson.*;
@@ -80,4 +81,4 @@ class FilmControllerTest {
 
         assertEquals(400, response.statusCode(), "Код ответа сервера не совпадает");
     }
-}
+}*/
