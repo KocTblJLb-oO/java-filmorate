@@ -20,4 +20,10 @@ public interface FilmStorage {
 
     // Проверка существования фильма
     boolean findFilm(long id);
+
+    void clearFilms();
+
+    Collection<Film> getPopular(long count);
+
+    void addLike(long id, long userId);
 }

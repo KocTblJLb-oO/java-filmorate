@@ -7,10 +7,7 @@ import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import java.time.LocalDate;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
+import java.util.*;
 
 @Component
 @Slf4j
@@ -75,11 +72,6 @@ public class InMemoryFilmStorage implements FilmStorage {
             log.error(message);
             throw new ValidationException(message);
         }
-        // Если у фильма нет списка для лайков, добавляем его
-        if (film.getLikes() == null) {
-            log.trace("Метод: {}. У фильма нет лайков.", getMethod());
-            film.setLikes(new HashSet<>());
-        }
     }
 
     // Проверка существования фильма
@@ -90,5 +82,24 @@ public class InMemoryFilmStorage implements FilmStorage {
     // Возвращает имя метода для логирования
     private String getMethod() {
         return new Throwable().getStackTrace()[1].getMethodName();
+    }
+
+    /*
+    ------------------------------------------------ МЕТОДЫ БД, ЗДЕСЬ НЕ РЕАЛИЗОВАНЫ
+*/
+
+    @Override
+    public void clearFilms() {
+
+    }
+
+    @Override
+    public Collection<Film> getPopular(long count) {
+        return List.of();
+    }
+
+    @Override
+    public void addLike(long id, long userId) {
+
     }
 }

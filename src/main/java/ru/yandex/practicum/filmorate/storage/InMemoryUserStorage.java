@@ -6,10 +6,7 @@ import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
+import java.util.*;
 
 @Component
 @Slf4j
@@ -86,10 +83,6 @@ public class InMemoryUserStorage implements UserStorage {
         }
     }
 
-    /*
-    ------------------------------------------------ СЛУЖЕБНЫЕ МЕТОДЫ
-*/
-
     // Возвращает имя метода для логирования
     private String getMethod() {
         return new Throwable().getStackTrace()[1].getMethodName();
@@ -98,5 +91,32 @@ public class InMemoryUserStorage implements UserStorage {
     // Проверка существования пользователя
     public boolean findUser(long id) {
         return users.containsKey(id);
+    }
+
+    /*
+    ------------------------------------------------ Методы UserDbStorage. Здесь не используются
+*/
+
+    @Override
+    public void clearUsers(){}
+
+    @Override
+    public void addFriends(long id, long idFriends) {
+
+    }
+
+    @Override
+    public List<User> getFriends(long id) {
+        return List.of();
+    }
+
+    @Override
+    public void deleteFriend(long id, long friendId) {
+
+    }
+
+    @Override
+    public Collection<User> getCommonFriend(long id, long otherId) {
+        return List.of();
     }
 }

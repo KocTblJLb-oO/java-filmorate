@@ -13,7 +13,6 @@ import java.util.Map;
 import java.util.Set;
 
 @Data
-@AllArgsConstructor
 public class User {
     long id;
 
@@ -29,5 +28,4 @@ public class User {
     LocalDate birthday;
 
     Set<Long> friends = new HashSet<>();
-    Map<Long, Boolean> friendsStatus = new HashMap<>();
 }

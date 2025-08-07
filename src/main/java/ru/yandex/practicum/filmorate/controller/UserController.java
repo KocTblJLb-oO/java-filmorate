@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.controller;
 
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
@@ -17,7 +18,7 @@ public class UserController {
     private final UserStorage userStorage;
     private final UserService userService;
 
-    public UserController(UserStorage userStorage, UserService userService) {
+    public UserController(@Qualifier("UserDbStorage") UserStorage userStorage, UserService userService) {
         this.userStorage = userStorage;
         this.userService = userService;
     }
@@ -43,6 +44,7 @@ public class UserController {
     // Получение всех пользователей
     @GetMapping
     public Collection<User> getAllUsers() {
+        log.info("Метод: {}. Получение всех пользователей.", getMethod());
         return userStorage.getAllUsers();
     }
 
@@ -77,8 +79,6 @@ public class UserController {
         return userService.getCommonFriend(id, otherId);
     }
 
-
-
 /*
     ------------------------------------------------ СЛУЖЕБНЫЕ МЕТОДЫ
 */
@@ -86,5 +86,13 @@ public class UserController {
     // Возвращает имя метода для логирования
     private String getMethod() {
         return new Throwable().getStackTrace()[1].getMethodName();
+    }
+
+    // Удаление всех пользователей из БД для тестирования приложения
+    // http://localhost:8080/users/delete
+    @GetMapping("/delete")
+    public void clearUsers() {
+        log.info("Метод: {}.", getMethod());
+        userStorage.clearUsers();
     }
 }
