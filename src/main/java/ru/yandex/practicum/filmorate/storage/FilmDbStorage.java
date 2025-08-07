@@ -176,7 +176,7 @@ public class FilmDbStorage implements FilmStorage {
             log.error(message);
             throw new NotFoundException(message);
         }*/
-
+/*
         // Проверка жанра
         String queryGenre = "select max(genre_id) FROM genres";
         int maxGenreId = jdbc.queryForObject(queryGenre, Integer.class);
@@ -192,7 +192,7 @@ public class FilmDbStorage implements FilmStorage {
             String message = "Жанр: " + maxIdGenreInFilm + " — Больше максимального: " + maxGenreId;
             log.error(message);
             throw new NotFoundException(message);
-        }
+        }*/
     }
 
     // Проверка существования фильма
