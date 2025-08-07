@@ -31,7 +31,7 @@ public class GenresController {
     }
 
     @GetMapping
-    public Collection<Genre> getAllGenre (){
+    public Collection<Genre> getAllGenre() {
         return genreDbStorage.getAllGenre();
     }
 

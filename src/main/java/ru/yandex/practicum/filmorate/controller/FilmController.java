@@ -22,7 +22,7 @@ public class FilmController {
     private final FilmService filmService;
     private final FilmDbStorage filmDbStorage;
 
-    public FilmController (@Qualifier("FilmDbStorage") FilmStorage filmStorage, FilmService filmService, GenreDbStorage genreDbStorage, FilmDbStorage filmDbStorage) {
+    public FilmController(@Qualifier("FilmDbStorage") FilmStorage filmStorage, FilmService filmService, GenreDbStorage genreDbStorage, FilmDbStorage filmDbStorage) {
         this.filmStorage = filmStorage;
         this.filmService = filmService;
         this.filmDbStorage = filmDbStorage;
@@ -92,7 +92,7 @@ public class FilmController {
 */
 
     @GetMapping("/{id}")
-    public Film getFilmsWithGenre (@PathVariable("id") long idFilm) {
+    public Film getFilmsWithGenre(@PathVariable("id") long idFilm) {
         filmService.checkFilm(idFilm);
         log.info("Метод: {}. Жанр: {}", getMethod(), idFilm);
 

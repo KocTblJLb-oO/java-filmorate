@@ -98,7 +98,8 @@ public class InMemoryUserStorage implements UserStorage {
 */
 
     @Override
-    public void clearUsers(){}
+    public void clearUsers() {
+    }
 
     @Override
     public void addFriends(long id, long idFriends) {

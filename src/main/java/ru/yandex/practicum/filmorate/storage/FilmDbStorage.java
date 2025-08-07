@@ -143,7 +143,7 @@ public class FilmDbStorage implements FilmStorage {
     ------------------------------------------------ ФИЛЬМЫ ПО ЖАНРАМ
 */
 
-    public Collection<Film> getFilmsWithGenre (long genreId) {
+    public Collection<Film> getFilmsWithGenre(long genreId) {
         String query = "SELECT * FROM FILM " +
                 "WHERE film_id in (" +
                 "SELECT film_id FROM FILM_GENRES " +

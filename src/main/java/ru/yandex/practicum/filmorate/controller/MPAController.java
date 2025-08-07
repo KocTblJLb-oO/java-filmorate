@@ -13,7 +13,7 @@ import java.util.Collection;
 public class MPAController {
     private MpaDbStorage mpaDbStorage;
 
-    public MPAController (MpaDbStorage mpaBdStorage) {
+    public MPAController(MpaDbStorage mpaBdStorage) {
         this.mpaDbStorage = mpaBdStorage;
     }
 
@@ -28,7 +28,7 @@ public class MPAController {
     }
 
     @GetMapping
-    public Collection<Mpa> getAllMpa (){
+    public Collection<Mpa> getAllMpa() {
         return mpaDbStorage.getAllMpa();
     }
 

@@ -127,8 +127,8 @@ public class UserDbStorage implements UserStorage {
         String query = "SELECT user2_id FROM FRIENDS " +
                 "WHERE user1_id = ? " +
                 "and user2_id in (" +
-                    "SELECT user2_id FROM FRIENDS " +
-                    "WHERE user1_id = ?)";
+                "SELECT user2_id FROM FRIENDS " +
+                "WHERE user1_id = ?)";
         friendIds = jdbc.queryForList(query, Long.class, id, otherId);
         if (friendIds.isEmpty()) {
             log.info("Метод: {}. Друзей нет", getMethod());// Если друзей нет возвращаем пустой список
