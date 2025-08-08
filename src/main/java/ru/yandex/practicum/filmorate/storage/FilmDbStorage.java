@@ -169,14 +169,14 @@ public class FilmDbStorage implements FilmStorage {
             throw new ValidationException(message);
         }
         // Проверка рейтинга
-       /* String query = "SELECT COALESCE(MAX(mpa_id), 0) FROM MPA";
+        String query = "SELECT COALESCE(MAX(mpa_id), 0) FROM MPA";
         int maxRatingId = jdbc.queryForObject(query, Integer.class);
         if (film.getMpa().getId() > maxRatingId) {
             String message = "Райтинг: " + film.getMpa().getId() + " — Больше максимального: " + maxRatingId;
             log.error(message);
             throw new NotFoundException(message);
-        }*/
-/*
+        }
+
         // Проверка жанра
         String queryGenre = "select max(genre_id) FROM genres";
         int maxGenreId = jdbc.queryForObject(queryGenre, Integer.class);
@@ -192,7 +192,7 @@ public class FilmDbStorage implements FilmStorage {
             String message = "Жанр: " + maxIdGenreInFilm + " — Больше максимального: " + maxGenreId;
             log.error(message);
             throw new NotFoundException(message);
-        }*/
+        }
     }
 
     // Проверка существования фильма
