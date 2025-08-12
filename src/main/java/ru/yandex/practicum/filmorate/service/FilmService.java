@@ -17,17 +17,32 @@ public class FilmService {
     private final FilmStorage filmStorage;
 
 
-    public FilmService(@Qualifier("UserDbStorage") UserStorage userStorage, @Qualifier("FilmDbStorage") FilmStorage filmStorage) {
+    public FilmService(@Qualifier("UserDbStorage") UserStorage userStorage,
+                       @Qualifier("FilmDbStorage") FilmStorage filmStorage) {
         this.userStorage = userStorage;
         this.filmStorage = filmStorage;
     }
 
+    public Film create(Film film) {
+        log.info("Метод: {}. Новый фильм: {}", getMethod(), film);
+        return filmStorage.create(film);
+    }
+
+    public Film update(Film newFilm) {
+        log.info("Метод: {}. Фильм для обновления: {}", getMethod(), newFilm);
+        return filmStorage.update(newFilm);
+    }
+
+    public Collection<Film> getAllFilms() {
+        return filmStorage.getAllFilms();
+    }
+
+    public Film getFilm(long id) {
+        return filmStorage.getFilm(id);
+    }
+
     // Лайк фильму
     public void addLike(long id, long userId) {
-        log.info("Метод: {}. ID фильма: {} ИД пользователя: {}", getMethod(), id, userId);
-        checkUser(userId);
-        checkFilm(id);
-
         filmStorage.addLike(id, userId);
     }
 
@@ -47,7 +62,7 @@ public class FilmService {
 */
     // Проверка пользователей
     private void checkUser(long id) {
-        if (!userStorage.findUser(id)) {
+        if (!userStorage.existsById(id)) {
             String message = "Пользователь с ID: " + id + " — не найден.";
             log.error(message);
             throw new NotFoundException(message);
@@ -56,11 +71,16 @@ public class FilmService {
 
     // Проверка фильма
     public void checkFilm(long id) {
-        if (!filmStorage.findFilm(id)) {
+        if (!filmStorage.existsById(id)) {
             String message = "Фильм с ID: " + id + " — не найден.";
             log.error(message);
             throw new NotFoundException(message);
         }
+    }
+
+    // Очистка БД для тестов
+    public void clearFilms() {
+        filmStorage.clearFilms();
     }
 
     // Возвращает имя метода для логирования

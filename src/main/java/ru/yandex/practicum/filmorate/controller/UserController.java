@@ -15,11 +15,10 @@ import java.util.List;
 @RequestMapping("/users")
 @Slf4j
 public class UserController {
-    private final UserStorage userStorage;
+
     private final UserService userService;
 
-    public UserController(@Qualifier("UserDbStorage") UserStorage userStorage, UserService userService) {
-        this.userStorage = userStorage;
+    public UserController(UserService userService) {
         this.userService = userService;
     }
 
@@ -31,21 +30,21 @@ public class UserController {
     @PostMapping
     public User creatUser(@Valid @RequestBody User user) {
         log.info("Метод: {}. Новый пользователь: {}", getMethod(), user);
-        return userStorage.create(user);
+        return userService.create(user);
     }
 
     // Обновление пользователя
     @PutMapping
     public User updateUser(@Valid @RequestBody User newUser) {
         log.info("Метод: {}. Пользователь для обновления: {}", getMethod(), newUser);
-        return userStorage.update(newUser);
+        return userService.update(newUser);
     }
 
     // Получение всех пользователей
     @GetMapping
     public Collection<User> getAllUsers() {
         log.info("Метод: {}. Получение всех пользователей.", getMethod());
-        return userStorage.getAllUsers();
+        return userService.getAllUsers();
     }
 
     /*
@@ -93,6 +92,6 @@ public class UserController {
     @GetMapping("/delete")
     public void clearUsers() {
         log.info("Метод: {}.", getMethod());
-        userStorage.clearUsers();
+        userService.clearUsers();
     }
 }

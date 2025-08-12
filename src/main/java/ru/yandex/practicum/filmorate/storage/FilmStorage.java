@@ -19,7 +19,7 @@ public interface FilmStorage {
     Film getFilm(long id);
 
     // Проверка существования фильма
-    boolean findFilm(long id);
+    boolean existsById(long id);
 
     void clearFilms();
 

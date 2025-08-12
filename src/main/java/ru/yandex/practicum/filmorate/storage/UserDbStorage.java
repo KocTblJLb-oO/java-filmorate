@@ -23,7 +23,6 @@ public class UserDbStorage implements UserStorage {
     @Override
     public User create(User user) {
         log.info("Метод: {}. Новый пользователь: {}", getMethod(), user);
-        validate(user);
         user.setId(getNextId());
 
         // Сначала пытаемся обновить пользователя на случай, если он уже есть
@@ -48,7 +47,6 @@ public class UserDbStorage implements UserStorage {
     @Override
     public User update(User newUser) {
         log.info("Метод: {}. Пользователь для обновления: {}", getMethod(), newUser);
-        validate(newUser);
 
         String updateQuery = "UPDATE USERS " +
                 "SET email = ?, login = ?, name = ?, BIRTH_DAY = ? " +
@@ -153,21 +151,6 @@ public class UserDbStorage implements UserStorage {
         return new Throwable().getStackTrace()[1].getMethodName();
     }
 
-    // Проверка пользователя
-    private void validate(User user) {
-        if (user.getLogin().indexOf(" ") > 0) {
-            String message = "Логин: " + user.getLogin() + " - не может содержать пробелы";
-            log.error(message);
-            throw new ValidationException(message);
-        }
-        // Устанавливает в качестве имени логин, если имя пустое
-        if (user.getName() == null || user.getName().isBlank()) {
-            user.setName(user.getLogin());
-            log.info("Метод: {}. В качестве имени использован логин: {}",
-                    getMethod(), user.getLogin());
-        }
-    }
-
     public void clearUsers() {
         String queryDeteteFriends = "DELETE FROM FRIENDS;";
         String updateQuery = "DELETE FROM USERS;";
@@ -183,7 +166,7 @@ public class UserDbStorage implements UserStorage {
     }
 
     // Проверка существования пользователя
-    public boolean findUser(long id) {
+    public boolean existsById(long id) {
         log.info("Метод: {}. ID пользователя: {} ", getMethod(), id);
         String query = "SELECT COUNT(user_id) FROM USERS where user_id = ?;";
         int result = jdbc.queryForObject(query, Integer.class, id);

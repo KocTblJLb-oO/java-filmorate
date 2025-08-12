@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.dal.mappers.GenreRowMapper;
-import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Genre;
 
 import java.util.Collection;
@@ -36,8 +35,8 @@ public class GenreDbStorage {
         }, filmId);
     }
 
-    public Genre getMpaName(long id) {
-        findGenre(id);
+    public Genre getGenreName(long id) {
+        existsById(id);
         String query =
                 "SELECT * FROM Genres " +
                         "where genre_id = ?";
@@ -54,15 +53,14 @@ public class GenreDbStorage {
 */
 
     // Проверка существования Жанра
-    public void findGenre(long genreId) {
+    public boolean existsById(long genreId) {
         log.info("Метод: {}. ID Жанра: {}", getMethod(), genreId);
         String query = "SELECT count(*) FROM Genres WHERE genre_id = ?";
         Integer count = jdbc.queryForObject(query, Integer.class, genreId);
         if (count == null || count == 0) {
-            String message = "Жанр с ID: " + genreId + " — не найден.";
-            log.error(message);
-            throw new NotFoundException(message);
+            return false;
         }
+        return true;
     }
 
     // Возвращает имя метода для логирования

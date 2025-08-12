@@ -21,7 +21,6 @@ public class MpaDbStorage {
     }
 
     public Mpa getMpaName(long id) {
-        findMpa(id);
         String query =
                 "SELECT * FROM Mpa " +
                         "where mpa_id = ?";
@@ -38,15 +37,14 @@ public class MpaDbStorage {
 */
 
     // Проверка существования MPA
-    public void findMpa(long mpaId) {
+    public boolean existsById(long mpaId) {
         log.info("Метод: {}. ID MPA: {}", getMethod(), mpaId);
         String query = "SELECT count(*) FROM Mpa WHERE mpa_id = ?";
         Integer count = jdbc.queryForObject(query, Integer.class, mpaId);
         if (count == null || count == 0) {
-            String message = "MPA с ID: " + mpaId + " — не найден.";
-            log.error(message);
-            throw new NotFoundException(message);
+            return false;
         }
+        return true;
     }
 
     // Возвращает имя метода для логирования

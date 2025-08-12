@@ -20,7 +20,7 @@ public interface UserStorage {
     User getUserById(long id);
 
     // Проверка существования пользователя
-    boolean findUser(long id);
+    boolean existsById(long id);
 
     void clearUsers();
 

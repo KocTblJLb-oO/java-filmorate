@@ -3,7 +3,7 @@ package ru.yandex.practicum.filmorate.controller;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Mpa;
-import ru.yandex.practicum.filmorate.storage.MpaDbStorage;
+import ru.yandex.practicum.filmorate.service.MPAService;
 
 import java.util.Collection;
 
@@ -11,10 +11,10 @@ import java.util.Collection;
 @RestController
 @RequestMapping("/mpa")
 public class MPAController {
-    private MpaDbStorage mpaDbStorage;
+    private final MPAService mpaService;
 
-    public MPAController(MpaDbStorage mpaBdStorage) {
-        this.mpaDbStorage = mpaBdStorage;
+    public MPAController(MPAService mpaService) {
+        this.mpaService = mpaService;
     }
 
     /*
@@ -24,12 +24,12 @@ public class MPAController {
     @GetMapping("/{id}")
     public Mpa getMpaName(@PathVariable("id") long id) {
         log.info("Метод: {}. ИД МПА: {}", getMethod(), id);
-        return mpaDbStorage.getMpaName(id);
+        return mpaService.getMpaName(id);
     }
 
     @GetMapping
     public Collection<Mpa> getAllMpa() {
-        return mpaDbStorage.getAllMpa();
+        return mpaService.getAllMpa();
     }
 
     // Возвращает имя метода для логирования

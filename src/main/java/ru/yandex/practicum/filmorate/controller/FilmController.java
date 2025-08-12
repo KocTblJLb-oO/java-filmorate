@@ -18,14 +18,10 @@ import java.util.Collection;
 @RequestMapping("/films")
 public class FilmController {
 
-    private final FilmStorage filmStorage;
     private final FilmService filmService;
-    private final FilmDbStorage filmDbStorage;
 
-    public FilmController(@Qualifier("FilmDbStorage") FilmStorage filmStorage, FilmService filmService, GenreDbStorage genreDbStorage, FilmDbStorage filmDbStorage) {
-        this.filmStorage = filmStorage;
+    public FilmController(FilmService filmService) {
         this.filmService = filmService;
-        this.filmDbStorage = filmDbStorage;
     }
 
     /*
@@ -36,20 +32,20 @@ public class FilmController {
     @PostMapping
     public Film creatFilm(@Valid @RequestBody Film film) {
         log.info("Метод: {}. Новый фильм: {}", getMethod(), film);
-        return filmStorage.create(film);
+        return filmService.create(film);
     }
 
     // Обновление фильма
     @PutMapping
     public Film updateFilm(@Valid @RequestBody Film newFilm) {
         log.info("Метод: {}. Обновлённый фильм: {}", getMethod(), newFilm);
-        return filmStorage.update(newFilm);
+        return filmService.update(newFilm);
     }
 
     // Получение всех фильмов
     @GetMapping
     public Collection<Film> getAllFilms() {
-        return filmStorage.getAllFilms();
+        return filmService.getAllFilms();
     }
 
     /*
@@ -96,7 +92,7 @@ public class FilmController {
         filmService.checkFilm(idFilm);
         log.info("Метод: {}. Жанр: {}", getMethod(), idFilm);
 
-        return filmDbStorage.getFilm(idFilm);
+        return filmService.getFilm(idFilm);
     }
 
     /*
@@ -113,6 +109,6 @@ public class FilmController {
     @GetMapping("/delete")
     public void clearFilms() {
         log.info("Метод: {}.", getMethod());
-        filmStorage.clearFilms();
+        filmService.clearFilms();
     }
 }

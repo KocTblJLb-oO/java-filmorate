@@ -52,7 +52,7 @@ public class FilmDbStorage implements FilmStorage {
                 jdbc.update(query, film.getId(), film.getName(), film.getDescription(), film.getReleaseDate(),
                         film.getDuration(), film.getMpa().getId());
             } catch (DataAccessException e) {
-                System.out.println("Ошибка вставки значения: " + e.getMessage());
+                log.debug("Ошибка вставки значения: {}", e.getMessage());
             }
         }
         updateGenre(film);
@@ -72,7 +72,7 @@ public class FilmDbStorage implements FilmStorage {
                         "(?, ?)";
                 jdbc.update(query, film.getId(), genre.getId());
             } catch (DataAccessException e) {
-                System.out.println("Ошибка вставки значения. Такой жанр уже есть: " + e.getMessage());
+                log.debug("Ошибка вставки значения. Такой жанр уже есть: {}", e.getMessage());
             }
         }
 
@@ -91,7 +91,7 @@ public class FilmDbStorage implements FilmStorage {
             jdbc.update(updateQuery, newFilm.getName(), newFilm.getDescription(), newFilm.getReleaseDate(),
                     newFilm.getDuration(), newFilm.getMpa().getId(), newFilm.getId());
         } catch (DataAccessException e) {
-            System.out.println("Ошибка вставки значения: " + e.getMessage());
+            log.debug("Ошибка вставки значения: {}", e.getMessage());
         }
 
         updateGenre(newFilm);
@@ -135,7 +135,7 @@ public class FilmDbStorage implements FilmStorage {
                     "(?, ?)";
             jdbc.update(query, id, userId);
         } catch (DataAccessException e) {
-            System.out.println("Ошибка вставки значения. Такой лайк уже есть: " + e.getMessage());
+            log.debug("Ошибка вставки значения. Такой лайк уже есть: {}", e.getMessage());
         }
     }
 
@@ -196,7 +196,7 @@ public class FilmDbStorage implements FilmStorage {
     }
 
     // Проверка существования фильма
-    public boolean findFilm(long filmId) {
+    public boolean existsById(long filmId) {
         log.info("Метод: {}. ID фильма: {}", getMethod(), filmId);
         String query = "SELECT count(film_id) FROM film WHERE film_id = ?";
         Integer count = jdbc.queryForObject(query, Integer.class, filmId);
@@ -212,7 +212,7 @@ public class FilmDbStorage implements FilmStorage {
     // Проверка пользователей
     private void checkUser(long id) {
         log.info("Метод: {}. ИД пользователя: {}", getMethod(), id);
-        if (!userStorage.findUser(id)) {
+        if (!userStorage.existsById(id)) {
             String message = "Пользователь с ID: " + id + " — не найден.";
             log.error(message);
             throw new NotFoundException(message);
@@ -222,7 +222,7 @@ public class FilmDbStorage implements FilmStorage {
     // Проверка фильма
     private void checkFilm(long id) {
         log.info("Метод: {}. ID фильма: {}", getMethod(), id);
-        if (!findFilm(id)) {
+        if (!existsById(id)) {
             String message = "Фильм с ID: " + id + " — не найден.";
             log.error(message);
             throw new NotFoundException(message);
