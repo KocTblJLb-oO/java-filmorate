@@ -19,5 +19,11 @@ public interface FilmStorage {
     Film getFilm(long id);
 
     // Проверка существования фильма
-    boolean findFilm(long id);
+    boolean existsById(long id);
+
+    void clearFilms();
+
+    Collection<Film> getPopular(long count);
+
+    void addLike(long id, long userId);
 }

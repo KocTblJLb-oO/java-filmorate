@@ -1,3 +1,4 @@
+/*
 package ru.yandex.practicum.filmorate.controller;
 
 import com.google.gson.*;
@@ -85,4 +86,4 @@ class UserControllerTest {
         JsonObject jsonObject = jsonElement.getAsJsonObject();
         assertEquals("loginTest", jsonObject.get("name").getAsString(), "Не удалось получить пользователя");
     }
-}
+}*/

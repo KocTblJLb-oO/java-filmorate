@@ -1,13 +1,14 @@
 package ru.yandex.practicum.filmorate.service;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
+import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -15,17 +16,36 @@ public class UserService {
 
     private final UserStorage userStorage;
 
-    public UserService(UserStorage userStorage) {
+    public UserService(@Qualifier("UserDbStorage") UserStorage userStorage) {
         this.userStorage = userStorage;
     }
 
+    public User create(User user) {
+        log.info("Метод: {}. Новый пользователь: {}", getMethod(), user);
+        validate(user);
+
+        return userStorage.create(user);
+    }
+
+    public User update(User newUser) {
+        log.info("Метод: {}. Пользователь для обновления: {}", getMethod(), newUser);
+        validate(newUser);
+
+        return userStorage.update(newUser);
+    }
+
+    public Collection<User> getAllUsers() {
+        return userStorage.getAllUsers();
+    }
+
+
     // Добавление в друзья
     public void addFriend(long id, long friendId) {
+        log.info("Метод: {}. ID пользователя: {} ИД друга: {}", getMethod(), id, friendId);
         checkUser(id);
         checkUser(friendId);
 
-        userStorage.getUserById(id).getFriends().add(friendId);
-        userStorage.getUserById(friendId).getFriends().add(id);
+        userStorage.addFriends(id, friendId);
     }
 
     // Удаление из друзей
@@ -33,20 +53,13 @@ public class UserService {
         checkUser(id);
         checkUser(friendId);
 
-        userStorage.getUserById(id).getFriends().remove(friendId);
-        userStorage.getUserById(friendId).getFriends().remove(id);
+        userStorage.deleteFriend(id, friendId);
     }
 
     // Получение списка друзей
     public List<User> getAllFriends(long id) {
         checkUser(id);
-
-        Set<Long> userFriends = userStorage.getUserById(id).getFriends();
-
-        return userStorage.getAllUsers()
-                .stream()
-                .filter(user -> userFriends.contains(user.getId()))
-                .collect(Collectors.toList());
+        return userStorage.getFriends(id);
     }
 
     // Список друзей, общих с другим пользователем
@@ -54,24 +67,44 @@ public class UserService {
         checkUser(id);
         checkUser(otherId);
 
-        Set<Long> commonFriends = userStorage.getUserById(id).getFriends(); // Список id друзей пользователя
-        commonFriends.retainAll(userStorage.getUserById(otherId).getFriends()); // В списке остаются только совпадающие id
-
-        return userStorage.getAllUsers()
-                .stream()
-                .filter(user -> commonFriends.contains(user.getId()))
-                .collect(Collectors.toList());
+        return userStorage.getCommonFriend(id, otherId);
     }
+
 
     /*
    ------------------------------------------------ СЛУЖЕБНЫЕ МЕТОДЫ
 */
-    // Проверка пользователей
+    // Проверка существования пользователей
     private void checkUser(long id) {
-        if (!userStorage.findUser(id)) {
+        if (!userStorage.existsById(id)) {
             String message = "Пользователь с ID: " + id + " — не найден.";
             log.error(message);
             throw new NotFoundException(message);
         }
+    }
+
+    // Проверка пользователя
+    private void validate(User user) {
+        if (user.getLogin().indexOf(" ") > 0) {
+            String message = "Логин: " + user.getLogin() + " - не может содержать пробелы";
+            log.error(message);
+            throw new ValidationException(message);
+        }
+        // Устанавливает в качестве имени логин, если имя пустое
+        if (user.getName() == null || user.getName().isBlank()) {
+            user.setName(user.getLogin());
+            log.info("Метод: {}. В качестве имени использован логин: {}",
+                    getMethod(), user.getLogin());
+        }
+    }
+
+    // Возвращает имя метода для логирования
+    private String getMethod() {
+        return new Throwable().getStackTrace()[1].getMethodName();
+    }
+
+    // Удаление всех пользователей из БД для тестирования приложения
+    public void clearUsers() {
+        userStorage.clearUsers();
     }
 }

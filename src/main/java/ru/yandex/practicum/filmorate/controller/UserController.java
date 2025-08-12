@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
-import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.util.Collection;
 import java.util.List;
@@ -14,11 +13,10 @@ import java.util.List;
 @RequestMapping("/users")
 @Slf4j
 public class UserController {
-    private final UserStorage userStorage;
+
     private final UserService userService;
 
-    public UserController(UserStorage userStorage, UserService userService) {
-        this.userStorage = userStorage;
+    public UserController(UserService userService) {
         this.userService = userService;
     }
 
@@ -30,20 +28,21 @@ public class UserController {
     @PostMapping
     public User creatUser(@Valid @RequestBody User user) {
         log.info("Метод: {}. Новый пользователь: {}", getMethod(), user);
-        return userStorage.create(user);
+        return userService.create(user);
     }
 
     // Обновление пользователя
     @PutMapping
     public User updateUser(@Valid @RequestBody User newUser) {
         log.info("Метод: {}. Пользователь для обновления: {}", getMethod(), newUser);
-        return userStorage.update(newUser);
+        return userService.update(newUser);
     }
 
     // Получение всех пользователей
     @GetMapping
     public Collection<User> getAllUsers() {
-        return userStorage.getAllUsers();
+        log.info("Метод: {}. Получение всех пользователей.", getMethod());
+        return userService.getAllUsers();
     }
 
     /*
@@ -77,8 +76,6 @@ public class UserController {
         return userService.getCommonFriend(id, otherId);
     }
 
-
-
 /*
     ------------------------------------------------ СЛУЖЕБНЫЕ МЕТОДЫ
 */
@@ -86,5 +83,13 @@ public class UserController {
     // Возвращает имя метода для логирования
     private String getMethod() {
         return new Throwable().getStackTrace()[1].getMethodName();
+    }
+
+    // Удаление всех пользователей из БД для тестирования приложения
+    // http://localhost:8080/users/delete
+    @GetMapping("/delete")
+    public void clearUsers() {
+        log.info("Метод: {}.", getMethod());
+        userService.clearUsers();
     }
 }
