@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.service.GenresService;
-import ru.yandex.practicum.filmorate.storage.GenreDbStorage;
 
 import java.util.Collection;
 
